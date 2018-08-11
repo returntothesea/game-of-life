@@ -4,13 +4,11 @@ clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
 
 print("running")
 
-HEIGHT = 20
-WIDTH = 40
+HEIGHT = 5
+WIDTH = 10
 RANDOM_THRESHOLD = 0.5
 
 def dead_state (height, width):
-	print("height is " + str(height))
-	print("width is " + str(width))
 	arr = [[0] * width for i in range(height)]
 	return arr
 
@@ -42,7 +40,61 @@ def render (state):
 		print_line(state[i])
 	print("-" * (WIDTH + 2))
 
+def update_cell(state, x, y):
+	neighbors = 0
+
+	if (x - 1 >= 0): # if cell is not on the top edge, check cells above
+		if (state[x - 1][y]):
+			neighbors += 1
+		if (y - 1 >= 0):
+			if (state[x - 1][y - 1]):
+				neighbors += 1
+		if (y + 1 <= (WIDTH - 1)):
+			if (state[x - 1][y + 1]):
+				neighbors += 1
+
+	if (x + 1 <= (HEIGHT - 1)): # if cell is not on the bottom edge, check cells below
+		if (state[x + 1][y]):
+			neighbors += 1
+		if(y - 1 >= 0):
+			if (state[x + 1][y - 1]):
+				neighbors += 1
+		if(y + 1 <= (WIDTH - 1)):
+			if (state[x + 1][y + 1]):
+				neighbors += 1
+
+	if (y - 1 >= 0): # if cell is not on the far left, check left cell
+		if (state[x][y - 1]):
+			neighbors += 1
+	if (y + 1 <= WIDTH - 1): # if cell is not on the far right, check right cell
+		if (state[x][y + 1]):
+			neighbors += 1
+
+	if not (state[x][y]): # if the cell is dead
+		if (neighbors == 3):
+			return 1
+	if (state[x][y]): # if the cell is living
+		if (neighbors == 2 or neighbors == 3):
+			return 1
+	return 0
+
+
+def next_state(state):
+	new_state = dead_state(HEIGHT, WIDTH)
+	# TODO: pass in 'state' array and change every cell based on how
+	# many dead or living neighbors it has.
+
+	# Print the coordinates of every cell.
+	for x in range(len(state)):
+		for y in range(len(state[0])):
+			new_state[x][y] = update_cell(state, x, y)
+
+	return new_state
+
+
 
 r = random_state(HEIGHT, WIDTH)
 
+render(r)
+r = next_state(r)
 render(r)
