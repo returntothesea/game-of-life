@@ -1,11 +1,11 @@
-import random, os
+import random, os, time
 
 clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
 
 print("running")
 
-HEIGHT = 5
-WIDTH = 10
+HEIGHT = 20
+WIDTH = 40
 RANDOM_THRESHOLD = 0.5
 
 def dead_state (height, width):
@@ -34,7 +34,7 @@ def print_line(line):
 	print(string)
 
 def render (state):
-	# clear()
+	clear()
 	print("-" * (WIDTH + 2))
 	for i in range(len(state)):
 		print_line(state[i])
@@ -80,11 +80,8 @@ def update_cell(state, x, y):
 
 
 def next_state(state):
-	new_state = dead_state(HEIGHT, WIDTH)
-	# TODO: pass in 'state' array and change every cell based on how
-	# many dead or living neighbors it has.
+	new_state = dead_state(len(state), len(state[0]))
 
-	# Print the coordinates of every cell.
 	for x in range(len(state)):
 		for y in range(len(state[0])):
 			new_state[x][y] = update_cell(state, x, y)
@@ -98,3 +95,8 @@ r = random_state(HEIGHT, WIDTH)
 render(r)
 r = next_state(r)
 render(r)
+
+for x in range(100):
+	render(r)
+	r = next_state(r)
+	time.sleep(.1)
